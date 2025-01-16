@@ -44,3 +44,16 @@ def test_list_expenses():
     mock_repository.fetch_expenses.assert_called_once()
 
 
+def test_delete_expense():
+    mock_repository = ExpenseJsonRepository()
+    expense_service = ExpenseService(mock_repository)
+    expense = expense_service.add_expense("Shoes", 1500)
+
+    expense_service.delete(expense.id)
+    remaining_expenses = expense_service.list_expenses()
+
+    expenses_set = {expense.id for expense in remaining_expenses}
+    assert expense.id not in expenses_set
+
+
+

@@ -13,3 +13,7 @@ class ExpenseRepositoryInterface(ABC):
     def fetch_expenses(self) -> List[Expense]:
         pass
 
+    @abstractmethod
+    def delete_expense(self, expense_id: int) -> None:
+        pass
+

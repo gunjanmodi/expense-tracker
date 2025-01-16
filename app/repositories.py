@@ -6,6 +6,9 @@ from .constants import DATA_FILE
 from .boundaries import ExpenseRepositoryInterface
 from .models import Expense
 
+from .utils.logger_config import setup_logger
+logger = setup_logger()
+
 
 class DateTimeEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -22,6 +25,7 @@ class ExpenseJsonRepository(ExpenseRepositoryInterface):
         self._assign_new_id(new_expense, expenses)
         expenses.append(new_expense)
         self._write_expense_to_file(expenses)
+        logger.info(f"Expense added successfully (ID: {new_expense.id})")
         return new_expense
 
     def fetch_expenses(self) -> List[Expense]:
@@ -53,3 +57,11 @@ class ExpenseJsonRepository(ExpenseRepositoryInterface):
 
     def _assign_new_id(self, new_expense: Expense, expenses: List[Expense]) -> None:
         new_expense.id = max([expense.id for expense in expenses], default=0) + 1
+
+    def delete_expense(self, expense_id) -> None:
+        expenses = self.fetch_expenses()
+        updated_expenses = [expense for expense in expenses if expense.id != expense_id]
+        if len(expenses) == len(updated_expenses):
+            raise ValueError(f"Expense with ID {expense_id} not found.")
+        self._write_expense_to_file(updated_expenses)
+        logger.info(f"Deleted the Expense with ID: {expense_id}")

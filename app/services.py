@@ -15,7 +15,6 @@ class ExpenseService:
 
     def add_expense(self, description: str, amount: float) -> Expense:
         new_expense = self.repository.save_expenses(Expense(description=description, amount=amount))
-        logger.info(f"Expense added successfully (ID: {new_expense.id})")
         return new_expense
 
 
@@ -27,5 +26,5 @@ class ExpenseService:
         pass
 
 
-    def delete(self, ):
-        pass
+    def delete(self, expense_id: int) -> None:
+        self.repository.delete_expense(expense_id)
