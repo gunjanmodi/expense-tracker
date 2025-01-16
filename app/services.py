@@ -1,0 +1,31 @@
+from typing import List
+
+from .models import Expense
+from .utils.logger_config import setup_logger
+from .boundaries import ExpenseRepositoryInterface
+
+
+logger = setup_logger()
+
+
+class ExpenseService:
+
+    def __init__(self, expense_repository: ExpenseRepositoryInterface):
+        self.repository = expense_repository
+
+    def add_expense(self, description: str, amount: float) -> Expense:
+        new_expense = self.repository.save_expenses(Expense(description=description, amount=amount))
+        logger.info(f"Expense added successfully (ID: {new_expense.id})")
+        return new_expense
+
+
+    def list_expenses(self) -> List[Expense]:
+        return self.repository.fetch_expenses()
+
+
+    def summary(self, ):
+        pass
+
+
+    def delete(self, ):
+        pass
