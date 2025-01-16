@@ -14,12 +14,12 @@ class ExpenseService:
         self.repository = expense_repository
 
     def add_expense(self, description: str, amount: float) -> Expense:
-        new_expense = self.repository.save_expenses(Expense(description=description, amount=amount))
+        new_expense = self.repository.add_expense(Expense(description=description, amount=amount))
         return new_expense
 
 
     def list_expenses(self) -> List[Expense]:
-        return self.repository.fetch_expenses()
+        return self.repository.get_all_expenses()
 
 
     def summary(self, ):

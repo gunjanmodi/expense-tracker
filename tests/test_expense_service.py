@@ -4,17 +4,18 @@ from app.models import Expense
 from unittest.mock import MagicMock
 from app.services import ExpenseService
 from app.repositories import ExpenseJsonRepository
-
+from app.utils.json_file_handler import JSONFileHandler
+from app.constants import TESTS_DATA_FILE
 
 
 def test_add_expense():
     mock_repository = MagicMock()
     expense_service = ExpenseService(mock_repository)
 
-    new_expense = expense_service.add_expense("Grocery", 5000)
+    expense_service.add_expense("Grocery", 5000)
 
-    mock_repository.save_expenses.assert_called_once()
-    saved_expense = mock_repository.save_expenses.call_args[0][0]
+    mock_repository.add_expense.assert_called_once()
+    saved_expense = mock_repository.add_expense.call_args[0][0]
     assert saved_expense.description == "Grocery"
     assert saved_expense.amount == 5000
 
@@ -27,7 +28,7 @@ def test_list_expenses():
         Expense(id=1, date=datetime(2025, 1, 1, 10, 0, 0), amount=100.0, description="Grocery"),
         Expense(id=2, date=datetime(2025, 1, 2, 14, 0, 0), amount=200.0, description="Rent"),
     ]
-    mock_repository.fetch_expenses.return_value = mock_expenses
+    mock_repository.get_all_expenses.return_value = mock_expenses
 
     expenses = expense_service.list_expenses()
     assert len(expenses) == 2
@@ -41,11 +42,11 @@ def test_list_expenses():
     assert expenses[1].description == "Rent"
     assert expenses[1].date == datetime(2025, 1, 2, 14, 0, 0)
 
-    mock_repository.fetch_expenses.assert_called_once()
+    mock_repository.get_all_expenses.assert_called_once()
 
 
 def test_delete_expense():
-    mock_repository = ExpenseJsonRepository()
+    mock_repository = ExpenseJsonRepository(JSONFileHandler(TESTS_DATA_FILE))
     expense_service = ExpenseService(mock_repository)
     expense = expense_service.add_expense("Shoes", 1500)
 

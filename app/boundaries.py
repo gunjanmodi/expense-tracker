@@ -1,19 +1,29 @@
 from abc import ABC, abstractmethod
 from app.models import Expense
-from typing import List
+from typing import List, Dict
 
 
 class ExpenseRepositoryInterface(ABC):
 
     @abstractmethod
-    def save_expenses(self, expense: Expense) -> Expense:
+    def add_expense(self, expense: Expense) -> Expense:
         pass
 
     @abstractmethod
-    def fetch_expenses(self) -> List[Expense]:
+    def get_all_expenses(self) -> List[Expense]:
         pass
 
     @abstractmethod
     def delete_expense(self, expense_id: int) -> None:
+        pass
+
+
+class FileHandlerInterface(ABC):
+    @abstractmethod
+    def read(self) -> List[Dict]:
+        pass
+
+    @abstractmethod
+    def write(self, data: List[Dict]):
         pass
 
