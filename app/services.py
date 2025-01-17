@@ -20,7 +20,7 @@ class ExpenseService:
     def list_expenses(self) -> List[Expense]:
         return self.repository.get_all_expenses()
 
-    def summary(self, ):
+    def summary(self):
         return self.repository.total_expense()
 
     def delete(self, expense_id: int) -> None:
