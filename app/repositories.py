@@ -32,6 +32,14 @@ class ExpenseJsonRepository(ExpenseRepositoryInterface):
         self._save_expense(updated_expenses)
         self.logger.info(f"Deleted the Expense with ID: {expense_id}")
 
+    def total_expense(self) -> float:
+        return sum([expense.amount for expense in self.get_all_expenses()])
+
+    def clear_all_expenses(self) -> None:
+        self._save_expense([])
+
+
+
     def _assign_new_id(self, new_expense: Expense, expenses: List[Expense]) -> None:
         new_expense.id = max([expense.id for expense in expenses], default=0) + 1
 

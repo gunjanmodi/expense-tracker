@@ -17,6 +17,14 @@ class ExpenseRepositoryInterface(ABC):
     def delete_expense(self, expense_id: int) -> None:
         pass
 
+    @abstractmethod
+    def total_expense(self) -> float:
+        pass
+
+    @abstractmethod
+    def clear_all_expenses(self) -> None:
+        pass
+
 
 class FileHandlerInterface(ABC):
     @abstractmethod
@@ -24,6 +32,5 @@ class FileHandlerInterface(ABC):
         pass
 
     @abstractmethod
-    def write(self, data: List[Dict]):
+    def write(self, data: List[Dict]) -> None:
         pass
-

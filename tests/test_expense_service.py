@@ -46,8 +46,8 @@ def test_list_expenses():
 
 
 def test_delete_expense():
-    mock_repository = ExpenseJsonRepository(JSONFileHandler(TESTS_DATA_FILE))
-    expense_service = ExpenseService(mock_repository)
+    repository = ExpenseJsonRepository(JSONFileHandler(TESTS_DATA_FILE))
+    expense_service = ExpenseService(repository)
     expense = expense_service.add_expense("Shoes", 1500)
 
     expense_service.delete(expense.id)
@@ -56,5 +56,18 @@ def test_delete_expense():
     expenses_set = {expense.id for expense in remaining_expenses}
     assert expense.id not in expenses_set
 
+
+def test_summary_expense():
+    repository = ExpenseJsonRepository(JSONFileHandler(TESTS_DATA_FILE))
+    expense_service = ExpenseService(repository)
+
+    expense_service.add_expense("Grocery", 5000)
+    expense_service.add_expense("Rent", 10000)
+
+    total_expense = expense_service.summary()
+
+    assert total_expense == 15000
+
+    expense_service.clear_all_expenses()
 
 

@@ -27,7 +27,6 @@ class JSONFileHandler(FileHandlerInterface):
     def write(self, data: List[dict]) -> None:
         try:
             with open(self.file_path, "w") as file:
-                # json.dump([expense.model_dump() for expense in expenses], file, indent=4, cls=DateTimeEncoder)
                 json.dump(data, file, indent=4, cls=DateTimeEncoder)
 
         except IOError as e:

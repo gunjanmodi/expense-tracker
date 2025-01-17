@@ -17,14 +17,14 @@ class ExpenseService:
         new_expense = self.repository.add_expense(Expense(description=description, amount=amount))
         return new_expense
 
-
     def list_expenses(self) -> List[Expense]:
         return self.repository.get_all_expenses()
 
-
     def summary(self, ):
-        pass
-
+        return self.repository.total_expense()
 
     def delete(self, expense_id: int) -> None:
         self.repository.delete_expense(expense_id)
+
+    def clear_all_expenses(self) -> None:
+        self.repository.clear_all_expenses()
