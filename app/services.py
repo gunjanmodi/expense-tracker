@@ -24,9 +24,9 @@ class ExpenseService:
             return self.repository.get_all_expenses_by_category(category)
         return self.repository.get_all_expenses()
 
-    def summary(self, month:int=None, year:int=None):
+    def summary(self, month:int=None):
         if month:
-            return self.repository.total_expense_by_month(month, year)
+            return self.repository.total_expense_by_month(month)
         return self.repository.total_expense()
 
     def delete(self, expense_id: int) -> None:

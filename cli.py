@@ -24,7 +24,6 @@ def main():
     # Summary command
     summary_parser = subparsers.add_parser(name="summary", help="Show total expense summary")
     summary_parser.add_argument("--month", type=int, required=False,help="Get Summary by month")
-    summary_parser.add_argument("--year", type=int, required=False, help="Year of the given month")
 
     # Delete expense command
     delete_parser = subparsers.add_parser(name="delete", help="Delete an expense by ID")
@@ -56,7 +55,7 @@ def main():
                       f" Amount: {expense.amount}, Category: {expense.category}, Date: {expense.date}")
 
     elif args.command == "summary":
-        total = expense_service.summary(args.month, args.year)
+        total = expense_service.summary(args.month)
         print(f"Total expense: {total}")
 
     elif args.command == "delete":

@@ -112,21 +112,12 @@ def test_monthly_summary_expense():
     repository = ExpenseJsonRepository(JSONFileHandler(TESTS_DATA_FILE))
     expense_service = ExpenseService(repository)
 
-    december_date=datetime(2024, 12, 15)
-    expense_service.add_expense("Grocery", 5000, category="Basic", date_time=december_date)
-    expense_service.add_expense("Rent", 10000,  category="Basic", date_time=december_date)
-
     january_date = datetime(2025, 1, 10)
     expense_service.add_expense("Grocery", 5500, category="Basic", date_time=january_date)
     expense_service.add_expense("Rent", 11500, category="Basic", date_time=january_date)
 
-    total_expense = expense_service.summary()
-    december_total_expense = expense_service.summary(december_date.month, december_date.year)
-    january_total_expense = expense_service.summary(january_date.month, january_date.year)
+    january_total_expense = expense_service.summary(january_date.month)
 
-
-    assert total_expense == 32000
-    assert december_total_expense == 15000
     assert january_total_expense == 17000
 
     expense_service.clear_all_expenses()

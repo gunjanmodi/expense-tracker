@@ -41,7 +41,8 @@ class ExpenseJsonRepository(ExpenseRepositoryInterface):
     def total_expense(self) -> float:
         return sum([expense.amount for expense in self.get_all_expenses()])
 
-    def total_expense_by_month(self, month: int, year:int=datetime.now().today()) -> float:
+    def total_expense_by_month(self, month: int) -> float:
+        year: int = datetime.now().year
         total_monthly_expense = 0
         for expense in self.get_all_expenses():
             if expense.date.month == month and expense.date.year == year:
