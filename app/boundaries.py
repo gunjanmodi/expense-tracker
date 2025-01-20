@@ -33,6 +33,10 @@ class ExpenseRepositoryInterface(ABC):
     def clear_all_expenses(self) -> None:
         pass
 
+    @abstractmethod
+    def export_expenses_to_csv(self, file_path: str) -> None:
+        pass
+
 
 class FileHandlerInterface(ABC):
     @abstractmethod

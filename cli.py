@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+
 from app.services import ExpenseService
 from app.repositories import ExpenseJsonRepository
 from app.utils.json_file_handler import JSONFileHandler
@@ -28,6 +29,11 @@ def main():
     # Delete expense command
     delete_parser = subparsers.add_parser(name="delete", help="Delete an expense by ID")
     delete_parser.add_argument("--id", type=int, required=True, help="ID of the expense to delete")
+
+    # Export expenses command
+    csv_export_parser = subparsers.add_parser(name="export", help="Export expenses to a csv file")
+    csv_export_parser.add_argument("--file-path", required=True, help="Path to save the exported CSV file")
+
 
     # Clear all expenses command
     subparsers.add_parser(name="clear", help="Clear all expenses")
@@ -64,6 +70,10 @@ def main():
             print(f"Deleted expense with ID: {args.id}")
         except ValueError as e:
             print(f"Error: {e}")
+
+    elif args.command == "export":
+        expense_service.export_expenses_to_csv(args.file_path)
+        print(f"Expenses exported successfully to {args.file_path}")
 
     elif args.command == "clear":
         expense_service.clear_all_expenses()

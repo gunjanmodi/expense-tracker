@@ -34,3 +34,6 @@ class ExpenseService:
 
     def clear_all_expenses(self) -> None:
         self.repository.clear_all_expenses()
+
+    def export_expenses_to_csv(self, file_path: str) -> None:
+        self.repository.export_expenses_to_csv(file_path)

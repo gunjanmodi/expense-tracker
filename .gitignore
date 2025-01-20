@@ -174,3 +174,4 @@ readme.md
 plan.md
 .idea/
 app/expenses.json
+*.csv

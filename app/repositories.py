@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import List, Dict
+import csv
+
 from .boundaries import ExpenseRepositoryInterface, FileHandlerInterface
 from .models import Expense
 
@@ -9,8 +11,8 @@ LOGGER = setup_logger()
 
 class ExpenseJsonRepository(ExpenseRepositoryInterface):
 
-    def __init__(self, file_handler: FileHandlerInterface, logger=LOGGER):
-        self.file_handler = file_handler
+    def __init__(self, expense_file_handler: FileHandlerInterface, logger=LOGGER):
+        self.expense_file_handler = expense_file_handler
         self.logger = logger
 
     def add_expense(self, new_expense: Expense) -> Expense:
@@ -22,13 +24,12 @@ class ExpenseJsonRepository(ExpenseRepositoryInterface):
         return new_expense
 
     def get_all_expenses(self) -> List[Expense]:
-        raw_data = self.file_handler.read()
+        raw_data = self.expense_file_handler.read()
         return [Expense(**data) for data in raw_data]
 
     def get_all_expenses_by_category(self, category: str) -> List[Expense]:
-        raw_data = self.file_handler.read()
+        raw_data = self.expense_file_handler.read()
         return [Expense(**data) for data in raw_data if data["category"] == category]
-
 
     def delete_expense(self, expense_id) -> None:
         expenses = self.get_all_expenses()
@@ -49,6 +50,13 @@ class ExpenseJsonRepository(ExpenseRepositoryInterface):
                 total_monthly_expense += expense.amount
         return total_monthly_expense
 
+    def export_expenses_to_csv(self, file_path: str) -> None:
+        expenses = self.get_all_expenses()
+        with open(file_path, "w", newline="") as csv_file:
+            writer = csv.writer(csv_file)
+            writer.writerow(["ID", "Description", "Category", "Amount", "Date"])
+            for expense in expenses:
+                writer.writerow([expense.id, expense.description, expense.category, expense.amount, expense.date])
 
     def clear_all_expenses(self) -> None:
         self._save_expense([])
@@ -58,6 +66,4 @@ class ExpenseJsonRepository(ExpenseRepositoryInterface):
 
     def _save_expense(self, expenses: List[Expense]):
         data: List[Dict] = [expense.model_dump() for expense in expenses]
-        self.file_handler.write(data)
-
-
+        self.expense_file_handler.write(data)
