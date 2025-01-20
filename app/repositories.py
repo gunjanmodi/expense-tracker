@@ -24,6 +24,11 @@ class ExpenseJsonRepository(ExpenseRepositoryInterface):
         raw_data = self.file_handler.read()
         return [Expense(**data) for data in raw_data]
 
+    def get_all_expenses_by_category(self, category: str) -> List[Expense]:
+        raw_data = self.file_handler.read()
+        return [Expense(**data) for data in raw_data if data["category"] == category]
+
+
     def delete_expense(self, expense_id) -> None:
         expenses = self.get_all_expenses()
         updated_expenses = [expense for expense in expenses if expense.id != expense_id]

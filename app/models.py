@@ -9,3 +9,4 @@ class Expense(BaseModel):
     date: datetime = Field(default_factory=datetime.now)
     amount: float
     description: str
+    category: Optional[str] = None

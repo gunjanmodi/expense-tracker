@@ -15,9 +15,11 @@ def main():
     add_parser = subparsers.add_parser(name="add", help="Add a new expense")
     add_parser.add_argument("--description", type=str, required=True, help="Description of the expense")
     add_parser.add_argument("--amount", type=float, required=True, help="Amount of the expense")
+    add_parser.add_argument("--category", type=str, required=False, help="Category of the expense")
 
     # List expenses command
-    subparsers.add_parser(name="list", help="List all expenses")
+    list_parser = subparsers.add_parser(name="list", help="List all expenses")
+    list_parser.add_argument("--category", type=str,required=False,help="Category of the expense")
 
     # Summary command
     subparsers.add_parser(name="summary", help="Show total expense summary")
@@ -36,17 +38,20 @@ def main():
     expense_service = ExpenseService(repository)
 
     if args.command == "add":
-        new_expense = expense_service.add_expense(args.description, args.amount)
-        print(f"Added expense: ID={new_expense.id}, Description={new_expense.description}, Amount={new_expense.amount}")
+        # import pdb; pdb.set_trace()
+        new_expense = expense_service.add_expense(args.description, args.amount, args.category)
+        print(f"Added expense: ID={new_expense.id}, Description={new_expense.description},"
+              f" Amount={new_expense.amount}, Category={new_expense.category}")
 
     elif args.command == "list":
-        expenses = expense_service.list_expenses()
+        expenses = expense_service.list_expenses(args.category)
         if not expenses:
             print("No expenses found.")
         else:
             print("Expenses:")
             for expense in expenses:
-                print(f"ID: {expense.id}, Description: {expense.description}, Amount: {expense.amount}, Date: {expense.date}")
+                print(f"ID: {expense.id}, Description: {expense.description},"
+                      f" Amount: {expense.amount}, Category: {expense.category}, Date: {expense.date}")
 
     elif args.command == "summary":
         total = expense_service.summary()

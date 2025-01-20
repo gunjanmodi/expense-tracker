@@ -9,15 +9,30 @@ from app.constants import TESTS_DATA_FILE
 
 
 def test_add_expense():
-    mock_repository = MagicMock()
-    expense_service = ExpenseService(mock_repository)
+    repository = ExpenseJsonRepository(JSONFileHandler(TESTS_DATA_FILE))
+    expense_service = ExpenseService(repository)
 
-    expense_service.add_expense("Grocery", 5000)
+    expense = expense_service.add_expense("Grocery", 5000)
 
-    mock_repository.add_expense.assert_called_once()
-    saved_expense = mock_repository.add_expense.call_args[0][0]
-    assert saved_expense.description == "Grocery"
-    assert saved_expense.amount == 5000
+    assert expense.description == "Grocery"
+    assert expense.amount == 5000
+
+    expense_service.clear_all_expenses()
+
+
+def test_add_expense_with_category():
+    repository = ExpenseJsonRepository(JSONFileHandler(TESTS_DATA_FILE))
+    expense_service = ExpenseService(repository)
+
+    grocery_expense = expense_service.add_expense("Grocery", 5000, "Basic")
+    electricity_bill_expense = expense_service.add_expense("Electricity Bill", 3000, "Basic")
+    movie_expense = expense_service.add_expense("Movie", 500, "Entertainment")
+
+    assert grocery_expense.category == "Basic"
+    assert electricity_bill_expense.category == "Basic"
+    assert movie_expense.category == "Entertainment"
+
+    expense_service.clear_all_expenses()
 
 
 def test_list_expenses():
@@ -45,6 +60,26 @@ def test_list_expenses():
     mock_repository.get_all_expenses.assert_called_once()
 
 
+def test_list_expenses_with_category():
+    repository = ExpenseJsonRepository(JSONFileHandler(TESTS_DATA_FILE))
+    expense_service = ExpenseService(repository)
+    expense_service.add_expense("Grocery", 5000, "Basic")
+    expense_service.add_expense("Electricity Bill", 3000, "Basic")
+    expense_service.add_expense("Movie", 500, "Entertainment")
+
+    expenses = expense_service.list_expenses('Basic')
+
+    assert len(expenses) == 2
+    assert expenses[0].amount == 5000
+    assert expenses[0].description == "Grocery"
+    assert expenses[0].category == "Basic"
+    assert expenses[1].amount == 3000
+    assert expenses[1].description == "Electricity Bill"
+    assert expenses[1].category == "Basic"
+
+    expense_service.clear_all_expenses()
+
+
 def test_delete_expense():
     repository = ExpenseJsonRepository(JSONFileHandler(TESTS_DATA_FILE))
     expense_service = ExpenseService(repository)
@@ -55,6 +90,8 @@ def test_delete_expense():
 
     expenses_set = {expense.id for expense in remaining_expenses}
     assert expense.id not in expenses_set
+
+    expense_service.clear_all_expenses()
 
 
 def test_summary_expense():

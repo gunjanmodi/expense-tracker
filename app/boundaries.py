@@ -14,6 +14,10 @@ class ExpenseRepositoryInterface(ABC):
         pass
 
     @abstractmethod
+    def get_all_expenses_by_category(self, category: str) -> List[Expense]:
+        pass
+
+    @abstractmethod
     def delete_expense(self, expense_id: int) -> None:
         pass
 
