@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import List, Dict
 from .boundaries import ExpenseRepositoryInterface, FileHandlerInterface
 from .models import Expense
@@ -40,10 +41,16 @@ class ExpenseJsonRepository(ExpenseRepositoryInterface):
     def total_expense(self) -> float:
         return sum([expense.amount for expense in self.get_all_expenses()])
 
+    def total_expense_by_month(self, month: int, year:int=datetime.now().today()) -> float:
+        total_monthly_expense = 0
+        for expense in self.get_all_expenses():
+            if expense.date.month == month and expense.date.year == year:
+                total_monthly_expense += expense.amount
+        return total_monthly_expense
+
+
     def clear_all_expenses(self) -> None:
         self._save_expense([])
-
-
 
     def _assign_new_id(self, new_expense: Expense, expenses: List[Expense]) -> None:
         new_expense.id = max([expense.id for expense in expenses], default=0) + 1

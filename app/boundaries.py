@@ -26,6 +26,10 @@ class ExpenseRepositoryInterface(ABC):
         pass
 
     @abstractmethod
+    def total_expense_by_month(self, month, year) -> float:
+        pass
+
+    @abstractmethod
     def clear_all_expenses(self) -> None:
         pass
 
