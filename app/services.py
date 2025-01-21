@@ -14,10 +14,11 @@ class ExpenseService:
     def __init__(self, expense_repository: ExpenseRepositoryInterface):
         self.repository = expense_repository
 
-    def add_expense(self, description: str, amount: float, category: Optional[str]='',
+    def add_expense(self, description: str, amount: float, category: str | None='',
                     date_time: datetime=datetime.now()) -> Expense:
         return self.repository.add_expense(Expense(description=description, amount=amount,
                                                           category=category, date=date_time))
+
 
     def list_expenses(self, category: Optional[str]='') -> List[Expense]:
         if category:

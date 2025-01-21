@@ -2,6 +2,8 @@
 
 import argparse
 
+from pydantic import ValidationError
+
 from app.services import ExpenseService
 from app.repositories import ExpenseJsonRepository
 from app.utils.json_file_handler import JSONFileHandler
@@ -45,10 +47,13 @@ def main():
     expense_service = ExpenseService(repository)
 
     if args.command == "add":
-        # import pdb; pdb.set_trace()
-        new_expense = expense_service.add_expense(args.description, args.amount, args.category)
-        print(f"Added expense: ID={new_expense.id}, Description={new_expense.description},"
-              f" Amount={new_expense.amount}, Category={new_expense.category}")
+        try:
+            new_expense = expense_service.add_expense(args.description, args.amount, args.category)
+            print(f"Added expense: ID={new_expense.id}, Description={new_expense.description},"
+                  f" Amount={new_expense.amount}, Category={new_expense.category}")
+        except ValidationError as ve:
+            for error in ve.errors():
+                print(f"Error in field '{error['loc'][0]}': {error['msg']}")
 
     elif args.command == "list":
         expenses = expense_service.list_expenses(args.category)
